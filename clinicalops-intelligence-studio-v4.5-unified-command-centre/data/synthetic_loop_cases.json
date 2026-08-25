@@ -1,0 +1,182 @@
+[
+  {
+    "case_id": "DLG-001",
+    "pathway": "postnatal",
+    "severity": "high",
+    "tags": ["postpartum", "anaemia", "missing_result", "abnormal_lab", "worsening_symptoms"],
+    "input_text": "Patient is 3 weeks postpartum and reports dizziness, fatigue and heavy bleeding last week. GP suspected anaemia and ordered FBC and ferritin. FBC returned Hb 8.9 g/dL. Ferritin result is missing. Patient reports worsening dizziness today.",
+    "gold": {
+      "clinical_context": "3 weeks postpartum",
+      "symptoms": ["dizziness", "fatigue", "heavy bleeding"],
+      "clinical_question": "possible postpartum anaemia",
+      "ordered_tests": ["FBC", "ferritin"],
+      "received_results": [{"test": "FBC", "finding": "Hb 8.9 g/dL", "status": "abnormal"}],
+      "missing_results": ["ferritin"],
+      "red_flags": ["worsening dizziness", "low haemoglobin"],
+      "open_loop": true,
+      "priority": "urgent clinician review"
+    }
+  },
+  {
+    "case_id": "DLG-002",
+    "pathway": "postnatal",
+    "severity": "high",
+    "tags": ["postpartum", "infection", "same_day_review"],
+    "input_text": "Patient is 2 weeks postpartum. She reports fever since yesterday, increasing pain around stitches, and bleeding with an unusual smell. No temperature value recorded. No wound review documented.",
+    "gold": {
+      "clinical_context": "2 weeks postpartum",
+      "symptoms": ["fever", "stitch pain", "abnormal smelling bleeding"],
+      "clinical_question": "possible postpartum infection",
+      "ordered_tests": [],
+      "received_results": [],
+      "missing_results": [],
+      "red_flags": ["fever", "abnormal discharge or bleeding smell", "wound pain"],
+      "open_loop": true,
+      "priority": "same-day clinical review"
+    }
+  },
+  {
+    "case_id": "DLG-003",
+    "pathway": "postnatal mental health",
+    "severity": "critical",
+    "tags": ["mental_health", "safeguarding", "urgent_escalation"],
+    "input_text": "Patient is 5 weeks postpartum and says she cannot cope. She reports intrusive thoughts and says the baby might be better without her. No safety plan, support-at-home assessment, or urgent mental health referral is recorded.",
+    "gold": {
+      "clinical_context": "5 weeks postpartum",
+      "symptoms": ["cannot cope", "intrusive thoughts"],
+      "clinical_question": "possible postnatal mental health crisis",
+      "ordered_tests": [],
+      "received_results": [],
+      "missing_results": [],
+      "red_flags": ["thoughts of self-harm or harm risk", "no safety plan"],
+      "open_loop": true,
+      "priority": "urgent mental health escalation"
+    }
+  },
+  {
+    "case_id": "DLG-004",
+    "pathway": "primary care",
+    "severity": "medium",
+    "tags": ["diabetes", "abnormal_lab", "no_follow_up"],
+    "input_text": "Patient had HbA1c ordered due to thirst and weight loss. Result returned HbA1c 78 mmol/mol. No follow-up appointment, medication discussion, or diabetes referral documented.",
+    "gold": {
+      "clinical_context": "primary care metabolic review",
+      "symptoms": ["thirst", "weight loss"],
+      "clinical_question": "possible diabetes",
+      "ordered_tests": ["HbA1c"],
+      "received_results": [{"test": "HbA1c", "finding": "78 mmol/mol", "status": "abnormal"}],
+      "missing_results": [],
+      "red_flags": ["abnormal HbA1c without documented follow-up"],
+      "open_loop": true,
+      "priority": "clinician follow-up required"
+    }
+  },
+  {
+    "case_id": "DLG-005",
+    "pathway": "mental health",
+    "severity": "medium",
+    "tags": ["psychiatry", "referral", "incomplete_pathway"],
+    "input_text": "Adult patient referred for ADHD assessment. Screening form completed and suggests significant impairment. Referral was planned but no referral status, appointment date, or patient communication is recorded.",
+    "gold": {
+      "clinical_context": "ADHD referral pathway",
+      "symptoms": ["attention difficulties", "functional impairment"],
+      "clinical_question": "ADHD assessment referral",
+      "ordered_tests": [],
+      "received_results": [],
+      "missing_results": [],
+      "red_flags": ["referral planned but status missing"],
+      "open_loop": true,
+      "priority": "pathway admin follow-up"
+    }
+  },
+  {
+    "case_id": "DLG-006",
+    "pathway": "orthopaedic",
+    "severity": "medium",
+    "tags": ["msk", "imaging", "missing_result"],
+    "input_text": "Patient with persistent knee pain after injury. X-ray was ordered two weeks ago. No imaging report is available in the notes and no follow-up plan is documented.",
+    "gold": {
+      "clinical_context": "musculoskeletal injury follow-up",
+      "symptoms": ["persistent knee pain"],
+      "clinical_question": "rule out bony injury or structural issue",
+      "ordered_tests": ["X-ray"],
+      "received_results": [],
+      "missing_results": ["X-ray"],
+      "red_flags": ["imaging ordered but result missing"],
+      "open_loop": true,
+      "priority": "follow-up missing imaging result"
+    }
+  },
+  {
+    "case_id": "DLG-007",
+    "pathway": "primary care",
+    "severity": "low",
+    "tags": ["resolved_loop", "normal_result"],
+    "input_text": "Patient had FBC ordered for tiredness. FBC returned within normal range. Clinician messaged patient with result and advised routine review if symptoms persist. No unresolved action documented.",
+    "gold": {
+      "clinical_context": "primary care tiredness review",
+      "symptoms": ["tiredness"],
+      "clinical_question": "screen for anaemia or infection",
+      "ordered_tests": ["FBC"],
+      "received_results": [{"test": "FBC", "finding": "normal range", "status": "normal"}],
+      "missing_results": [],
+      "red_flags": [],
+      "open_loop": false,
+      "priority": "no immediate follow-up required"
+    }
+  },
+  {
+    "case_id": "DLG-008",
+    "pathway": "postnatal",
+    "severity": "critical",
+    "tags": ["heavy_bleeding", "dizziness", "emergency"],
+    "input_text": "Patient is 1 week postpartum and reports soaking pads every hour, passing large clots, and feeling faint. No vital signs or urgent escalation documented.",
+    "gold": {
+      "clinical_context": "1 week postpartum",
+      "symptoms": ["heavy bleeding", "large clots", "feeling faint"],
+      "clinical_question": "possible postpartum haemorrhage",
+      "ordered_tests": [],
+      "received_results": [],
+      "missing_results": [],
+      "red_flags": ["heavy bleeding", "large clots", "faintness"],
+      "open_loop": true,
+      "priority": "emergency escalation"
+    }
+  },
+  {
+    "case_id": "DLG-009",
+    "pathway": "lab follow-up",
+    "severity": "medium",
+    "tags": ["abnormal_lab", "medication_monitoring", "no_action"],
+    "input_text": "Patient on lithium had monitoring bloods. Lithium level returned high at 1.4 mmol/L. No medication review, repeat test, toxicity symptom check, or patient contact recorded.",
+    "gold": {
+      "clinical_context": "medication monitoring",
+      "symptoms": [],
+      "clinical_question": "lithium safety monitoring",
+      "ordered_tests": ["lithium level"],
+      "received_results": [{"test": "lithium level", "finding": "1.4 mmol/L", "status": "abnormal"}],
+      "missing_results": [],
+      "red_flags": ["high lithium level without documented action"],
+      "open_loop": true,
+      "priority": "urgent medication safety review"
+    }
+  },
+  {
+    "case_id": "DLG-010",
+    "pathway": "respiratory",
+    "severity": "high",
+    "tags": ["imaging", "abnormal_result", "missed_follow_up"],
+    "input_text": "Chest X-ray was ordered for persistent cough and weight loss. Report says suspicious right upper lobe opacity and recommends urgent CT. No CT order or referral is documented.",
+    "gold": {
+      "clinical_context": "respiratory investigation",
+      "symptoms": ["persistent cough", "weight loss"],
+      "clinical_question": "possible serious lung pathology",
+      "ordered_tests": ["Chest X-ray"],
+      "received_results": [{"test": "Chest X-ray", "finding": "suspicious right upper lobe opacity; urgent CT recommended", "status": "abnormal"}],
+      "missing_results": [],
+      "red_flags": ["abnormal imaging with recommended CT not actioned"],
+      "open_loop": true,
+      "priority": "urgent clinician review"
+    }
+  }
+]

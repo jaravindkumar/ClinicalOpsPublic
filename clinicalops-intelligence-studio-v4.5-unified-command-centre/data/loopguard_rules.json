@@ -1,0 +1,11 @@
+{
+  "rules": [
+    {"id": "R001", "name": "Ordered test missing result", "condition": "ordered_tests_present_and_received_results_missing", "priority": "follow-up required", "flag": "open diagnostic loop"},
+    {"id": "R002", "name": "Abnormal result without documented follow-up", "condition": "abnormal_result_present_without_action", "priority": "clinician review required", "flag": "unresolved abnormal result"},
+    {"id": "R003", "name": "Worsening symptoms with abnormal result", "condition": "worsening_symptom_and_abnormal_result", "priority": "urgent clinician review", "flag": "clinical deterioration risk"},
+    {"id": "R004", "name": "Postnatal infection pattern", "condition": "fever_and_abnormal_bleeding_or_wound_pain", "priority": "same-day clinical review", "flag": "possible postnatal infection"},
+    {"id": "R005", "name": "Postnatal mental health crisis pattern", "condition": "self_harm_or_baby_harm_language", "priority": "urgent mental health escalation", "flag": "safeguarding / mental health red flag"},
+    {"id": "R006", "name": "Heavy bleeding and faintness", "condition": "heavy_bleeding_and_dizziness_or_faintness", "priority": "emergency escalation", "flag": "possible severe bleeding"},
+    {"id": "R007", "name": "Planned referral missing status", "condition": "referral_planned_status_missing", "priority": "pathway admin follow-up", "flag": "incomplete referral loop"}
+  ]
+}

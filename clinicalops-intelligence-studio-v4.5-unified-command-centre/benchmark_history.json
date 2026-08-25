@@ -1,0 +1,187 @@
+{
+  "project": "ClinicalOps UK benchmark programme",
+  "entries": [
+    {
+      "stage": "Gate 1 initial",
+      "hypothesis": "82 expected vs 88 actual suggested a cohort-engine defect.",
+      "test": "Exact-ID comparison: age 50\u201370 + T2DM + hypertension, exclude CKD.",
+      "result": "82 expected vs 88 actual; 13 FP, 7 FN.",
+      "conclusion": "Hypothesis rejected.",
+      "learning": "Oracle used pre-randomisation diagnosis flags rather than final clinical record."
+    },
+    {
+      "stage": "Gate 1 corrected",
+      "hypothesis": "Correcting the oracle should remove mismatch if the engine is correct.",
+      "test": "Regenerate and repeat exact-ID comparison.",
+      "result": "88 expected = 88 actual; FP=0, FN=0, precision=recall=1.0.",
+      "conclusion": "Base deterministic cohort engine passed."
+    },
+    {
+      "stage": "Gate 2 random",
+      "hypothesis": "Random injected scenarios could validate boundary behaviour.",
+      "test": "16 age/diagnosis/observation/recency/data-quality scenarios.",
+      "result": "12/16 passed.",
+      "conclusion": "Failures not accepted as product defects.",
+      "learning": "Random background data contaminated HbA1c and recency boundary cases."
+    },
+    {
+      "stage": "Gate 2 controlled",
+      "hypothesis": "Minimal pairs isolate one variable at a time.",
+      "test": "Controlled fixtures for age, HbA1c, CKD, diagnosis, data quality, 89/90/91-day recency.",
+      "result": "Fixture integrity PASS; base 15/15 PASS; HbA1c 14/14 PASS; 90-day recency 14 expected vs 15 actual, 1 FP.",
+      "conclusion": "First genuine product capability gap.",
+      "learning": "Engine supported recent_years but not protocol-grade recent_days; current_date reduced reproducibility."
+    },
+    {
+      "stage": "v2.5 change",
+      "hypothesis": "recent_days + as_of_date should make 89/90/91-day boundary exact and reproducible.",
+      "test": "Gate 2 controlled regression.",
+      "acceptance": "Expected=actual, FP=0, FN=0 for 90-day criterion."
+    },
+    {
+      "stage": "Gate 3 planned",
+      "hypothesis": "Ask Clinical Ops may lose or misinterpret criteria when natural-language requests combine demographics, diagnoses, exclusions, numeric thresholds and recency.",
+      "test": "34 deterministic prompt variants with explicit semantic ground truth; failures reported by criterion class.",
+      "acceptance": "100% on supported deterministic language cases before expanding to adversarial/ambiguous prompts and exact patient-set E2E validation."
+    },
+    {
+      "stage": "Gate 3 baseline",
+      "hypothesis": "Natural-language cohort interpretation might fail broadly.",
+      "test": "Frozen 34-prompt supported-language suite.",
+      "result": "3/34 passed (8.8%): 31 age extraction failures, 9 HbA1c numeric failures, 1 CKD exclusion failure; no temporal failures.",
+      "conclusion": "Broad-failure hypothesis refined: failures were concentrated in structured age/numeric extraction plus one negation form.",
+      "action": "v2.7 adds deterministic semantic enrichment while keeping all 34 prompts unchanged."
+    },
+    {
+      "stage": "Gate 3A v2.7 retest",
+      "result": "33/34 (97.1%), up from 3/34 (8.8%); residual failure was bare adult age range 'adults 50-70'.",
+      "action": "v2.8 adds the grammar class and freezes Gate 3A; introduces Gate 3B ambiguity/safe-handling suite."
+    },
+    {
+      "stage": "Gate 3A/3B closure",
+      "result": "Gate 3A frozen supported-language suite PASS; Gate 3B ambiguity/safe-handling suite PASS.",
+      "conclusion": "Proceed to patient-set validation; parser correctness alone is insufficient."
+    },
+    {
+      "stage": "Gate 3C planned",
+      "hypothesis": "Semantically correct parsed criteria should produce the exact intended patient set when executed by the deterministic cohort engine.",
+      "test": "Six representative prompts spanning base criteria, exclusion, HbA1c, temporal recency and combined criteria; compare exact IDs, FP/FN, precision/recall and equivalent-prompt consistency.",
+      "acceptance": "100% exact patient-set match and equivalent complex prompts produce identical cohort results."
+    },
+    {
+      "stage": "Gate 3C closure",
+      "result": "Natural-language \u2192 structured criteria \u2192 cohort engine \u2192 exact patient-set benchmark PASS, while prior gates remained green.",
+      "conclusion": "Deterministic Ask Clinical Ops \u2192 cohort selection workflow validated for the supported controlled criteria."
+    },
+    {
+      "stage": "Gate 4 planned",
+      "hypothesis": "MedGemma should add value on interpretation/ambiguity without overriding deterministic arithmetic or inventing missing clinical facts.",
+      "test": "Labelled cases: eligible, exclusions, thresholds, 90/91-day boundaries, missing data, conflicting labs and sparse records. Measure decision agreement, evidence grounding and unsafe forced decisions.",
+      "acceptance": "Initial gate: 10/10 decision agreement and zero forced decisions on insufficient-evidence cases."
+    },
+    {
+      "stage": "Gate 4 methodology correction",
+      "hypothesis": "The initial ELIGIBLE/INELIGIBLE benchmark did not match the production MedGemma contract.",
+      "evidence": "Production batch jobs import src.medgemma_client.extract; the product describes MedGemma as structured extraction of symptoms, tests, results, red flags and missing information.",
+      "decision": "Benchmark the real extraction path first; deterministic rules remain authoritative for basic arithmetic/protocol filtering."
+    },
+    {
+      "stage": "Gate 4A planned",
+      "test": "10 frozen packets through src.medgemma_client.extract using local Ollama MedGemma; capture structured output, failures, per-case latency and required-evidence recall.",
+      "acceptance": "Pipeline reliability requires 10/10 valid structured outputs and zero inference failures. Evidence fidelity is measured as a baseline for Gate 4B rather than tuned away."
+    },
+    {
+      "stage": "Gate 4A result",
+      "result": "Production MedGemma extraction: 10/10 valid structured outputs, 0 inference failures, 100% required-evidence recall; total runtime 76.555s (~7.66s/case).",
+      "conclusion": "Production inference/schema path is reliable on the frozen initial set. Evidence recall alone is insufficient to establish field-level clinical fidelity."
+    },
+    {
+      "stage": "Gate 4B planned",
+      "hypothesis": "A model can achieve perfect required-evidence recall while still mishandling negation, missing results, conflicts, uncertainty, or hallucinating unsupported fields.",
+      "test": "Score the exact saved Gate 4A outputs against frozen field-level assertions without rerunning the model.",
+      "acceptance": "All assertions pass; any failure is classified before prompt/schema/post-processing changes."
+    },
+    {
+      "stage": "Gate 4B result",
+      "result": "10/10 cases and 44/44 frozen field-fidelity/safety assertions passed on production-path MedGemma outputs.",
+      "conclusion": "Initial MedGemma benchmark is closed; move from model fidelity to system-scale architecture."
+    },
+    {
+      "stage": "Gate 5 planned",
+      "hypothesis": "Population-scale operations should remain deterministic and preserve exact correctness as data grows; MedGemma should remain bounded to selected subsets.",
+      "test": "1K, 10K, 50K, 100K, 300K UK synthetic patients. Measure generation, deterministic benchmark, repeated production cohort query, trial-ops build, storage growth and failures.",
+      "acceptance": "Every scale completes with cohort precision=1.0, recall=1.0 and no query/trial-ops failure."
+    },
+    {
+      "stage": "Gate 5 result",
+      "result": "1K\u2192300K all PASS. At 300K: precision=1.0, recall=1.0, generation 19.582s, cohort query median 0.2784s, trial ops 0.4653s, CSV 764.53MB.",
+      "conclusion": "Deterministic population/cohort architecture preserved exact correctness and scaled efficiently to 300K synthetic UK patients."
+    },
+    {
+      "stage": "Gate 6 planned",
+      "hypothesis": "Known operational failures injected into a synthetic UK multi-site study should be recoverable exactly from study/site operational metrics.",
+      "test": "Six sites; simulate screening, booking, DNA, enrolment, follow-up, clinical-review and data-quality states; inject capacity, DNA, recruitment, screen-failure, overdue-follow-up, unresolved-review and data-quality risks.",
+      "acceptance": "Exact risk-set recovery with FP=0, FN=0, precision=1.0, recall=1.0."
+    },
+    {
+      "stage": "Gate 6 initial result",
+      "result": "FAIL: TP=5 FP=2 FN=2, precision=0.714, recall=0.714. Leeds and Bristol exact-pass; London/Birmingham produced downstream slow-recruitment alerts; London Central and Manchester injections did not cross detector thresholds.",
+      "conclusion": "Original one-injected-label=one-detected-label hypothesis was too simplistic. Operational risks are causally coupled, and two scenario injections were not metric-grounded."
+    },
+    {
+      "stage": "Gate 6.1 revised hypothesis",
+      "hypothesis": "ClinicalOps should recover primary operational causes while also surfacing predictable downstream effects; those effects should not be counted as false positives.",
+      "test": "Freeze causal links HIGH_DNA\u2192SLOW_RECRUITMENT and HIGH_SCREEN_FAILURE\u2192SLOW_RECRUITMENT; correct capacity and slow-recruitment injections; score primary recall, expected-effect recall and unexpected alerts.",
+      "acceptance": "Primary recall=1.0, expected-effect recall=1.0, unexpected alerts=0."
+    },
+    {
+      "stage": "Gate 6.1 result",
+      "result": "PASS: primary-cause recall=1.0, expected-effect recall=1.0, unexpected alerts=0 across six UK synthetic sites.",
+      "conclusion": "Causal operational benchmark recovered both primary site problems and expected downstream recruitment effects without unexpected alerts."
+    },
+    {
+      "stage": "Gate 7 planned",
+      "hypothesis": "Operational intelligence should detect emerging site risk promptly, avoid false alarms during healthy periods, and clear alerts after recovery.",
+      "test": "26 weeks \u00d7 6 UK sites with five frozen risk episodes; score every site-week plus event-level onset and recovery.",
+      "acceptance": "Precision=1.0, recall=1.0, zero-week detection delay for deterministic threshold events, recovery detection=100%."
+    },
+    {
+      "stage": "Gate 7 result",
+      "result": "PASS across 156 site-weeks: precision=1.0, recall=1.0, FP=0, FN=0, mean detection delay=0 weeks, recovery detection=100%.",
+      "conclusion": "Controlled longitudinal operational signals were detected at onset and cleared after recovery."
+    },
+    {
+      "stage": "Gate 8 / v4.0 integration",
+      "hypothesis": "The validated components can be assembled into a coherent, auditable user workflow rather than remaining isolated benchmark scripts.",
+      "test": "Interactive golden journey: candidate \u2192 booking \u2192 DNA/attendance \u2192 evidence review \u2192 clinician decision \u2192 enrolment \u2192 follow-up \u2192 time advance \u2192 alert \u2192 intervention \u2192 recovery.",
+      "acceptance": "Automated golden journey persists each state transition, surfaces the frozen longitudinal risk and clears it after intervention."
+    },
+    {
+      "stage": "Gate 8 manual product validation \u2014 sparse alert finding",
+      "hypothesis": "A threshold-correct operational alert remains meaningful when used interactively with early-study sparse data.",
+      "observation": "One Manchester DNA from one observed visit produced a mathematically correct 100% DNA rate and triggered HIGH_DNA plus SLOW_RECRUITMENT in study week 1.",
+      "opinion_change": "Threshold correctness alone is insufficient for operational alert validity. Rate alerts require denominator safeguards and recruitment alerts require time-at-risk/exposure safeguards.",
+      "change": "v4.2 requires >=5 observed visits for rate-based HIGH_DNA and >=4 study weeks for standalone SLOW_RECRUITMENT, while preserving the frozen week-5 London North longitudinal benchmark signal.",
+      "regression": "Gate 8B reproduces the 1/1 DNA case and requires zero sparse-data alerts at week 1."
+    },
+    {
+      "stage": "Gate 8 manual longitudinal validation \u2014 recruitment context finding",
+      "hypothesis": "After adding denominator/time floors, low absolute enrolment is sufficient to identify slow-recruiting sites.",
+      "observation": "At week 6 the simulator raised SLOW_RECRUITMENT for all six sites because only one manually operated patient had been enrolled across the synthetic study.",
+      "opinion_change": "Recruitment risk cannot be judged from absolute enrolment without an expected trajectory and simulated study activity.",
+      "change": "v4.3 adds site-specific weekly recruitment targets, deterministic background recruitment, expected-vs-actual attainment, and a <70% of plan alert rule after sufficient exposure.",
+      "regression": "Gate 8C requires normal sites to remain clear, London North to deteriorate at week 5, and the intervention to restore both DNA and recruitment signals by week 6."
+    },
+    {
+      "stage": "Gate 8C v4.3 result",
+      "result": "FAIL 11/12: London North cumulative recruitment remained ~83% of plan at week 5, so the <70% cumulative threshold correctly did not fire despite the new DNA deterioration.",
+      "conclusion": "Cumulative target attainment is a lagging indicator and can mask an abrupt deterioration because earlier healthy recruitment buffers the total."
+    },
+    {
+      "stage": "v4.4 recruitment velocity hypothesis",
+      "hypothesis": "Emerging recruitment deterioration should be detected from recent recruitment velocity while cumulative attainment remains useful as a lagging site-performance indicator.",
+      "test": "London North drops from 2.5/week plan to 0.5/week at week 5. Gate 8C requires cumulative attainment to remain >=70% while velocity falls below 60% of plan and triggers SLOW_RECRUITMENT; intervention must restore velocity and clear the alert.",
+      "acceptance": "No normal-site false alerts; week-5 velocity deterioration detected; week-6 recovery detected."
+    }
+  ]
+}
